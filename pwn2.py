@@ -6,7 +6,7 @@ p=remote("167.172.231.203", 8888)
 sleep(.2)
 i = 0
 while i <= 100:
-    sleep(.3)
+    sleep(.5)
     resp=p.recv()
     print(resp)
     s1 = resp.find(b'g: ')
