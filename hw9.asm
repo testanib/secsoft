@@ -17,6 +17,7 @@ _start:
         mov ebx, 1
         mov ecx, esp
         mov edx, 20
+        push eax
         mov eax, 4
         int 0x80
         xor ebx, ebx
